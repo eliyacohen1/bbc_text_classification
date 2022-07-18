@@ -1,0 +1,3 @@
+from .wrapper_classification_bert_model import WrapperClassificationBertModel
+from .wrapper_model_interface import WrapperModelInterface
+

@@ -1,0 +1,51 @@
+version: "3"
+
+services:
+  pred:
+    container_name: pred
+    build: .
+    ports:
+      - "5000:5000"
+    links:
+      - redis
+    depends_on:
+      - redis
+    environment:
+      - FLASK_ENV=development
+    volumes:
+     - ./src:/code
+
+  redis:
+    container_name: redis
+    image: redis:5.0.5
+    ports:
+    - "6379:6379"
+    hostname: redis
+
+  mysql-db:
+        container_name: mysql-db
+        image: mysql:5.7
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: predictions
+        ports:
+            - '3306:3306'
+        volumes:
+            - ./database:/var/lib/mysql
+
+  celery:
+    build:
+      context: .
+    hostname: worker
+    entrypoint: celery
+    command: -A celery_app.celery worker --loglevel=info
+    links:
+      - redis
+      - mysql-db
+    depends_on:
+      - redis
+      - mysql-db
+
+volumes:
+  database:
