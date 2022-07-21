@@ -1,13 +1,13 @@
 from torch import nn
-from transformers import BertModel
+
+from .classifier_model_interface import ClassifierModelInterface
 
 
-class BertClassifier(nn.Module):
+class MLPClassifier(ClassifierModelInterface):
 
-    def __init__(self, pretrained_name: str, layers: list, num_classes: int, activation_func=nn.ReLU(), dropout=0.3):
-        super(BertClassifier, self).__init__()
+    def __init__(self, layers: list, num_classes: int, activation_func=nn.ReLU(), dropout=0.3):
+        super(MLPClassifier, self).__init__()
 
-        self.bert = BertModel.from_pretrained(pretrained_name)
         self.model_layers = [nn.Linear(layers[0], layers[1])]
         self.activation_func = activation_func
         self.dropout = nn.Dropout(dropout)
@@ -20,8 +20,6 @@ class BertClassifier(nn.Module):
 
         self.fc_module = nn.Sequential(*self.model_layers)
 
-    def forward(self, input_id, mask):
-        _, pooled = self.bert(input_ids=input_id, attention_mask=mask, return_dict=False)
-        out = self.fc_module(pooled)
-
+    def forward(self, embedding_input):
+        out = self.fc_module(embedding_input)
         return out
