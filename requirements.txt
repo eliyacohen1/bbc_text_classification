@@ -1,0 +1,11 @@
+torch
+pandas
+tqdm
+sklearn
+uvicorn==0.17.0
+fastapi==0.79.0
+pydantic==1.9.1
+numpy==1.19.5
+requests==2.27.1
+transformers==3.1.0
+tokenizers==0.8.1-rc2

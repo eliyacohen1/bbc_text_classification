@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  server:
+    container_name: server
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+     - ./src:/code
+     - ./torch_models:/app/torch_models
+
+volumes:
+  torch_models:
+
